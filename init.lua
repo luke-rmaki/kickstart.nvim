@@ -26,7 +26,11 @@
     which is very useful when you're not exactly sure of what you're looking for.
 ]]
 --
-require './lua/custom/keymaps/pre'
+require 'custom.keymaps.pre'
+
+if vim.g.neovide then
+  vim.g.neovide_fullscreen = true
+end
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -44,6 +48,9 @@ vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
+
+vim.o.guicursor =
+  'n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175'
 
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
@@ -128,29 +135,20 @@ vim.opt.rtp:prepend(lazypath)
 --  To update plugins you can run
 --    :Lazy update
 --
--- NOTE: Here is where you install your plugins.
+-- NOTE: Install plugins:
+--  - 'owner/repo'
+--  - Plugins can also be added by using a table, with the first argument being the link and the following keys can be used to configure plugin behavior/loading/etc.
+--  - Use `opts = {}` to force a plugin to be loaded.
+
 require('lazy').setup({
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
-  -- NOTE: Plugins can also be added by using a table,
-  -- with the first argument being the link and the following
-  -- keys can be used to configure plugin behavior/loading/etc.
-  --
-  -- Use `opts = {}` to force a plugin to be loaded.
-  --
-  --  This is equivalent to:
-  --    require('Comment').setup({})
+  -- file tree
   'ms-jpq/chadtree',
 
   { 'numToStr/Comment.nvim', opts = {} },
 
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  { -- Adds git related signs to the gutter, as well as utilities for managing changes. See :help gitsigns
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
@@ -162,21 +160,6 @@ require('lazy').setup({
       },
     },
   },
-
-  -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
-  --
-  -- This is often very useful to both group configuration, as well as handle
-  -- lazy loading plugins that don't need to be loaded immediately at startup.
-  --
-  -- For example, in the following configuration, we use:
-  --  event = 'VimEnter'
-  --
-  -- which loads which-key before all the UI elements are loaded. Events can be
-  -- normal autocommands events (`:help autocmd-events`).
-  --
-  -- Then, because we use the `config` key, the configuration only runs
-  -- after the plugin has been loaded:
-  --  config = function() ... end
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -200,13 +183,6 @@ require('lazy').setup({
       }, { mode = 'v' })
     end,
   },
-
-  -- NOTE: Plugins can specify dependencies.
-  --
-  -- The dependencies are proper plugin specifications as well - anything
-  -- you do for a plugin at the top level, you can do for a dependency.
-  --
-  -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -276,8 +252,7 @@ require('lazy').setup({
       pcall(require('telescope').load_extension, 'ui-select')
 
       -- See `:help telescope.builtin`
-      local builtin = require 'telescope.builtin'
-      require './lua/custom/keymaps/telescope'
+      require 'custom.keymaps.telescope'
     end,
   },
 
@@ -632,13 +607,13 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    'sho-87/kanagawa-paper.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'kanagawa-paper'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -675,7 +650,7 @@ require('lazy').setup({
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
+      -- cursor loation to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         return '%2l:%-2v'
@@ -762,6 +737,7 @@ require('lazy').setup({
   },
 })
 
+require 'custom.keymaps.post'
 -- The line beneath this is called `modeline`. See `:help modeline`
 --
 -- vim: ts=2 sts=2 sw=2 et

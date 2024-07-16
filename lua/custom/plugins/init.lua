@@ -7,4 +7,19 @@ return {
     'Exafunction/codeium.vim',
     event = 'BufEnter',
   },
+  {
+    'jonsmithers/vim-html-template-literals',
+    config = function()
+      vim.g.htl_css_templates = 1
+    end,
+  },
+  'pangloss/vim-javascript',
+  'leafgarland/typescript-vim',
+  'alvan/vim-closetag',
+  {
+    'mattn/emmet-vim',
+    config = function()
+      vim.g.user_emmet_leader_key = '<C-e>'
+    end,
+  },
 }
