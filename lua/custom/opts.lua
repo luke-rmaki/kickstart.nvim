@@ -24,6 +24,11 @@ vim.opt.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
+-- hide command space under status line
+vim.opt.cmdheight = 0
+
+vim.opt.showcmd = false
+vim.opt.showcmdloc = 'statusline'
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
